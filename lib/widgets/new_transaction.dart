@@ -45,63 +45,71 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(labelText: 'Enter the cost'),
-              controller: _amountupdate,
-              keyboardType: TextInputType.number,
-              // onChanged: (val) {
-              //   amountupdate = val;
-              // },
-            ),
-            TextField(
-              decoration: InputDecoration(labelText: 'Enter the label '),
-              controller: _titleupdate,
-              onSubmitted: (_) => submitData(),
-              // onChanged: (vali) {
-              //   titleupdate = vali;
-              // },
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    _selectedDate == null
-                        ? 'No dates chosen'
-                        : 'Picked date :${DateFormat.yMd().format(_selectedDate)}',
-                    style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(10),
-                  child: TextButton(
-                    onPressed: _datePicker,
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 10,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(labelText: 'Enter the cost'),
+                controller: _amountupdate,
+                keyboardType: TextInputType.number,
+                // onChanged: (val) {
+                //   amountupdate = val;
+                // },
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Enter the label '),
+                controller: _titleupdate,
+                onSubmitted: (_) => submitData(),
+                // onChanged: (vali) {
+                //   titleupdate = vali;
+                // },
+              ),
+              Row(
+                children: [
+                  Expanded(
                     child: Text(
-                      'Choose date',
-                      style: TextStyle(
-                          fontFamily: 'Quicksand', fontWeight: FontWeight.bold),
+                      _selectedDate == null
+                          ? 'No dates chosen'
+                          : 'Picked date :${DateFormat.yMd().format(_selectedDate)}',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w400, fontSize: 15),
                     ),
                   ),
-                ),
-              ],
-            ),
-            ElevatedButton(
-              onPressed: () {
-                submitData();
-              },
-              child: Text(
-                'DONE',
-                style: TextStyle(
-                    fontFamily: 'OpenSans', fontWeight: FontWeight.bold),
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    child: TextButton(
+                      onPressed: _datePicker,
+                      child: Text(
+                        'Choose date',
+                        style: TextStyle(
+                            fontFamily: 'Quicksand',
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            )
-          ],
+              ElevatedButton(
+                onPressed: () {
+                  submitData();
+                },
+                child: Text(
+                  'DONE',
+                  style: TextStyle(
+                      fontFamily: 'OpenSans', fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

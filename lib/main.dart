@@ -1,10 +1,17 @@
+import 'package:flutter/services.dart';
+
 import 'Models/transactions.dart';
 import 'widgets/new_transaction.dart';
 import 'widgets/transactions_list.dart';
 import 'package:flutter/material.dart';
 import 'widgets/chart.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations(
+  //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -13,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Personal Expense',
       theme: ThemeData(
           primarySwatch: Colors.purple,
-          accentColor: Colors.white,
+          accentColor: Colors.yellow,
           fontFamily: 'Quicksand',
           appBarTheme: AppBarTheme(
               // textTheme: ThemeData.light().textTheme.copyWith(title: TextStyle(fontFamily: 'OpenSans',fontSize: 20,),),
@@ -43,6 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
     //   date: DateTime.now(),
     // )
   ];
+
+  bool _showchart = false;
 
   List<Transaction> get _recentTransactions {
     print(_userTransaction);
@@ -91,6 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final _isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     final _appBar = AppBar(
       title: Text(
         'Personal Expense',
@@ -104,6 +116,12 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: Icon(Icons.add))
       ],
     );
+    final txlist = Container(
+        height: (MediaQuery.of(context).size.height -
+                _appBar.preferredSize.height -
+                MediaQuery.of(context).padding.top) *
+            0.7,
+        child: TransactionList(_userTransaction, _deleteTransaction));
     return Scaffold(
       appBar: _appBar,
       body: SingleChildScrollView(
@@ -111,18 +129,38 @@ class _MyHomePageState extends State<MyHomePage> {
             //mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                  height: (MediaQuery.of(context).size.height -
-                          _appBar.preferredSize.height -
-                          MediaQuery.of(context).padding.top) *
-                      0.3,
-                  child: Chart(_recentTransactions)),
-              Container(
-                  height: (MediaQuery.of(context).size.height -
-                          _appBar.preferredSize.height -
-                          MediaQuery.of(context).padding.top) *
-                      0.7,
-                  child: TransactionList(_userTransaction, _deleteTransaction)),
+              if (_isLandscape)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Show Chart"),
+                    Switch(
+                      value: _showchart,
+                      onChanged: (value) {
+                        setState(() {
+                          _showchart = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              if (!_isLandscape)
+                Container(
+                    height: (MediaQuery.of(context).size.height -
+                            _appBar.preferredSize.height -
+                            MediaQuery.of(context).padding.top) *
+                        0.3,
+                    child: Chart(_recentTransactions)),
+              if (!_isLandscape) txlist,
+              if (_isLandscape)
+                _showchart
+                    ? Container(
+                        height: (MediaQuery.of(context).size.height -
+                                _appBar.preferredSize.height -
+                                MediaQuery.of(context).padding.top) *
+                            0.7,
+                        child: Chart(_recentTransactions))
+                    : txlist,
             ]),
       ),
       floatingActionButton: FloatingActionButton(
